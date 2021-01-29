@@ -52,7 +52,9 @@ void path(int from, int to){
 	}
 }
 int main(){
+	bool vadded[20];
 	for(int i=0; i<20;i++){
+		vadded[i] = false;
 		for(int j=0;j<20;j++){
 			adj[i][j] = 0;
 		}
@@ -63,7 +65,23 @@ int main(){
 	char input[5];
 	cin >> input;
 	if(strcmp(input, "AV") == 0){
+		bool added = false;
+		int i = 0;
+		while(added == false && i<20){
+			if(vadded[i]==false){
+				added = true;
+				vadded[i] = true;
+			}
+			else{
+				i++;
+			}
+		}
+		if(added == true){
 		cout <<endl <<"Vertex Added." << endl;
+		}
+		else{
+		cout << "No more vertices for you, 20 is the max" << endl;
+		}
 	}
 	else if(strcmp(input, "RV") == 0){
 		cout << "remove which vertex? ";
@@ -105,13 +123,29 @@ int main(){
 		path(from, to);
 	}
 	else if(strcmp(input, "PR") == 0){
+		cout << "      ";
 		for(int i=0; i<20; i++){
+			if(vadded[i] == true){
+			cout << left << setw(8) << setfill(' ') << i+1;
+			}
+			else{
+			cout << left << setw(8) << setfill(' ') << " "; 
+			}
+		}
+		cout << endl;
+		for(int i=0; i<20; i++){
+			if(vadded[i] == true){
+			cout << left << setw(8) << setfill(' ') << i+1;
+			}
+			else{
+			cout << left << setw(8) << setfill(' ') << " ";
+			}
 			for(int j=0; j<20; j++){
 				if(adj[i][j] != 0){
-				cout << setprecision(3) << adj[i][j] << "   ";
+				cout << left << setprecision(3) << setw(8) << setfill(' ') << adj[i][j];
 				}
 				else{
-				cout << "      ";
+				cout << left << setw(8) << setfill(' ') << " ";
 				}
 			}
 			cout << endl;
