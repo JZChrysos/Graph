@@ -7,7 +7,10 @@ using namespace std;
 // adjacency table
 // weight 0 will be considered as no edge
 float adj[20][20];
-
+//labels
+char labels[20];
+// added
+bool vadded[20];
 //add edge
 void addedge(int from, int to, float weight){
 	adj[from - 1][to - 1] = weight;
@@ -38,7 +41,7 @@ void path(int from, int to){
 	}
 	for(int i=0; i<20; i++){
 		for(int j=0; j<20; j++){
-			if(visited[j] == false && dist[i] != 0 && adj[i][j] != 0 && (dist[j] == 0 || dist[j] > dist[i] + adj[i][j])){
+			if(dist[i] != 0 && adj[i][j] != 0 && (dist[j] == 0 || dist[j] > dist[i] + adj[i][j])){
 				dist[j] = dist[i]+adj[i][j];
 			}
 		}
@@ -51,10 +54,25 @@ void path(int from, int to){
 		cout << "There is no path from vertex " <<from << " to " << to << endl;
 	}
 }
+//search
+int search(char lab){
+	int i=0;
+	bool quit = false;
+	while(i<20 && quit == false){
+		if(labels[i]==lab && vadded[i] == true){
+			return i;
+			quit = true;
+		}
+		else{
+			i++;
+		}
+	}
+	return 88; // not found
+}
 int main(){
-	bool vadded[20];
 	for(int i=0; i<20;i++){
 		vadded[i] = false;
+		labels[i] = 'a';
 		for(int j=0;j<20;j++){
 			adj[i][j] = 0;
 		}
@@ -76,6 +94,10 @@ int main(){
 				i++;
 			}
 		}
+		cout << "Give the vertex a character label: ";
+		char lab;
+		cin >> lab;
+		labels[i] = lab;
 		if(added == true){
 		cout <<endl <<"Vertex Added." << endl;
 		}
@@ -85,48 +107,49 @@ int main(){
 	}
 	else if(strcmp(input, "RV") == 0){
 		cout << "remove which vertex? ";
-		int uservertex;
+		char uservertex;
 		cin >> uservertex;
-		remvert(uservertex);
+		remvert(search(uservertex));
+		vadded[search(uservertex)] = false;
 	}
 	else if(strcmp(input, "AE") == 0){
 		cout << "Specify the edge you would like to add." << endl;
 		cout << "Start vertex: ";
-		int from;
+		char from;
 		cin >> from;
 		cout << endl << "End vertex: ";
-		int to;
+		char to;
 		cin >> to;
 		cout << endl << "Weight: ";
 		float weight;
 		cin >> weight;
-		addedge(from, to, weight);
+		addedge(search(from)+1, search(to)+1, weight);
 	}
 	else if(strcmp(input, "RE") == 0){
 		cout << "Specify the edge you would like to remove." << endl;
 		cout << "Start vertex: ";
-		int from;
+		char from;
 		cin >> from;
 		cout << endl << "End vertex: ";
-		int to;
+		char to;
 		cin >> to;
-		remedge(from, to);
+		remedge(search(from)+1, search(to)+1);
 	}
 	else if(strcmp(input, "SP") == 0){
 		cout << "What path do you want to find?" << endl;
 		cout << "Start vertex: ";
-		int from;
+		char from;
 		cin >> from;
 		cout << endl << "End vertex: ";
-		int to;
+		char to;
 		cin >> to;
-		path(from, to);
+		path(search(from)+1, search(to)+1);
 	}
 	else if(strcmp(input, "PR") == 0){
 		cout << "      ";
 		for(int i=0; i<20; i++){
 			if(vadded[i] == true){
-			cout << left << setw(8) << setfill(' ') << i+1;
+			cout << left << setw(8) << setfill(' ') << labels[i];
 			}
 			else{
 			cout << left << setw(8) << setfill(' ') << " "; 
@@ -135,7 +158,7 @@ int main(){
 		cout << endl;
 		for(int i=0; i<20; i++){
 			if(vadded[i] == true){
-			cout << left << setw(8) << setfill(' ') << i+1;
+			cout << left << setw(8) << setfill(' ') << labels[i];
 			}
 			else{
 			cout << left << setw(8) << setfill(' ') << " ";
